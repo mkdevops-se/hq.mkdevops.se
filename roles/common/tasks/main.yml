@@ -23,6 +23,16 @@
     - LC_CTYPE=en_US.UTF-8
   tags: common
 
+- name: template sysctl tweaks (elastic and friends)
+  template: src=tweaks.conf.j2 dest=/etc/sysctl.d/tweaks.conf
+  register: sysctld_tweaks
+  tags: common
+
+- name: apply sysctl config if changed
+  shell: sysctl --system
+  when: sysctld_tweaks is changed
+  tags: common
+
 - name: install ntp
   yum: name=ntp state=present
   tags: common
