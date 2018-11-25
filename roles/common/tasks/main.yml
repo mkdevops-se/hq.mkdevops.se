@@ -27,7 +27,8 @@
 - name: install wget, unzip, emacs, mlocate and such
   yum:
     name: ['wget', 'zip', 'unzip', 'emacs', 'mlocate', 'bind-utils', 'pigz', 'man-pages',
-           'yum-plugin-versionlock']
+           'yum-plugin-versionlock', 'lsof', 'iotop', 'rsync', 'tcpdump', 'sysstat',
+           'policycoreutils-python', 'system-storage-manager', 'traceroute', 'bzip2']
     state: present
   tags: common
 
