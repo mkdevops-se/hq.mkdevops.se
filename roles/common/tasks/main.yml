@@ -37,18 +37,22 @@
     description: EPEL YUM repo
     baseurl: http://download.fedoraproject.org/pub/epel/$releasever/$basearch/
     gpgkey: http://download.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-$releasever
+    enabled: no
   tags: common
 
 - name: install epel-release
   yum: name=epel-release state=present
   tags: common
 
-- name: install htop, jq and python-pip
-  yum: name={{ item }} state=present
-  with_items:
-    - htop
-    - jq
-    - python-pip
+- name: install htop, jq, python-pip etc from epel
+  yum:
+    name: ['htop', 'jq', 'python-pip', 'bash-completion-extras']
+    enablerepo: epel
+    state: present
+  tags: common
+
+- name: install pip-18.1
+  pip: name=pip version=18.1 state=present
   tags: common
 
 - name: configure sysadmin accounts
