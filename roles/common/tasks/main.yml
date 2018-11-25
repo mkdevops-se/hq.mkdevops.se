@@ -27,7 +27,7 @@
 - name: install wget, unzip, emacs, mlocate and such
   yum:
     name: ['wget', 'zip', 'unzip', 'emacs', 'mlocate', 'bind-utils', 'pigz', 'man-pages',
-           'yum-plugin-versionlock', 'lsof', 'iotop', 'rsync', 'tcpdump', 'sysstat',
+           'yum-plugin-versionlock', 'lsof', 'iotop', 'rsync', 'tcpdump', 'sysstat', 'tmux',
            'policycoreutils-python', 'system-storage-manager', 'traceroute', 'bzip2']
     state: present
   tags: common
@@ -78,6 +78,22 @@
     key: "{{ lookup('file', item + '_id_rsa.pub') }}"
     exclusive: yes
   with_items: "{{ sysadmins }}"
+  tags: common
+
+- name: disable password authentication and root login in sshd_config
+  blockinfile:
+    dest: /etc/ssh/sshd_config
+    marker: "# {mark} ANSIBLE MANAGED BLOCK common"
+    block: |
+      PermitRootLogin no
+      Match Group wheel
+      	PasswordAuthentication no
+  register: sshd_config
+  tags: common
+
+- name: restart sshd to apply config changes
+  service: name=sshd state=restarted
+  when: sshd_config is changed
   tags: common
 
 - name: remove ~/.ssh/authorized_keys for 'root' user
