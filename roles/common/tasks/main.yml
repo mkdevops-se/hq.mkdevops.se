@@ -31,6 +31,13 @@
     state: present
   tags: common
 
+- name: disable emacs backup files by default
+  lineinfile:
+    line: (setq make-backup-files nil)
+    path: /usr/share/emacs/site-lisp/default.el
+    state: present
+  tags: common
+
 - name: epel repo
   yum_repository:
     name: epel
