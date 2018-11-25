@@ -4,8 +4,23 @@
   selinux: policy=targeted state=enforcing
   tags: common
 
+- name: set hostname
+  hostname: name="{{ inventory_hostname }}"
+  tags: common
+
 - name: set timezone to europe/stockholm
   copy: src=/usr/share/zoneinfo/Europe/Stockholm dest=/etc/localtime
+  tags: common
+
+- name: configure locale properly to avoid nag on ssh login
+  lineinfile:
+    path: /etc/environment
+    create: yes
+    mode: 0644
+    line: "{{ item }}"
+  with_items:
+    - LC_ALL=en_US.UTF-8
+    - LC_CTYPE=en_US.UTF-8
   tags: common
 
 - name: install ntp
