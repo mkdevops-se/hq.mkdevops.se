@@ -1,0 +1,136 @@
+---
+
+- name: enable selinux
+  selinux: policy=targeted state=enforcing
+  tags: common
+
+- name: set hostname
+  hostname: name="{{ inventory_hostname }}"
+  tags: common
+
+- name: set timezone to europe/stockholm
+  copy: src=/usr/share/zoneinfo/Europe/Stockholm dest=/etc/localtime
+  tags: common
+
+- name: configure locale properly to avoid nag on ssh login
+  lineinfile:
+    path: /etc/environment
+    create: yes
+    mode: 0644
+    line: "{{ item }}"
+  with_items:
+    - LC_ALL=en_US.UTF-8
+    - LC_CTYPE=en_US.UTF-8
+  tags: common
+
+- name: install ntp
+  yum: name=ntp state=present
+  tags: common
+
+- name: ntpd running and enabled
+  service: name=ntpd state=started enabled=yes
+  tags: common
+
+- name: install firewalld
+  yum: name=firewalld state=present
+  tags: common
+
+- name: firewalld running and enabled
+  service: name=firewalld state=started enabled=yes
+  tags: common
+
+- name: install wget, unzip, emacs, mlocate and such
+  yum:
+    name: ['wget', 'zip', 'unzip', 'emacs', 'mlocate', 'bind-utils', 'pigz', 'man-pages',
+           'yum-plugin-versionlock', 'lsof', 'iotop', 'rsync', 'tcpdump', 'sysstat', 'tmux',
+           'policycoreutils-python', 'system-storage-manager', 'traceroute', 'bzip2', 'telnet',
+           'lynx', 'selinux-policy-sandbox', 'tree', 'createrepo']
+    state: present
+  tags: common
+
+- name: disable emacs backup files by default
+  lineinfile:
+    line: (setq make-backup-files nil)
+    path: /usr/share/emacs/site-lisp/default.el
+    state: present
+  tags: common
+
+- name: ius repo
+  yum_repository:
+    name: ius
+    description: IUS Community Packages for Enterprise Linux {{
+                 ansible_distribution_major_version }} - $basearch
+    mirrorlist: https://mirrors.iuscommunity.org/mirrorlist?repo=ius-centos{{
+                ansible_distribution_major_version }}&arch=$basearch&protocol=http
+    gpgkey: https://dl.iuscommunity.org/pub/ius/IUS-COMMUNITY-GPG-KEY
+    enabled: no
+  tags: common
+
+- name: install modern git version from ius
+  yum: name=git2u enablerepo=ius state=present
+  tags: common
+
+- name: epel repo
+  yum_repository:
+    name: epel
+    description: EPEL YUM repo
+    baseurl: http://download.fedoraproject.org/pub/epel/$releasever/$basearch/
+    gpgkey: http://download.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-$releasever
+    enabled: no
+  tags: common
+
+- name: install epel-release
+  yum: name=epel-release state=present
+  tags: common
+
+- name: install htop, jq, python-pip etc from epel
+  yum:
+    name: ['htop', 'jq', 'python-pip', 'bash-completion-extras']
+    enablerepo: epel
+    state: present
+  tags: common
+
+- name: install pip-18.1
+  pip: name=pip version=18.1 state=present
+  tags: common
+
+- name: configure sysadmin accounts
+  user:
+    name: "{{ item }}"
+    groups: wheel
+    state: present
+    force: yes
+  with_items: "{{ sysadmins }}"
+  tags: common
+
+- name: set ~/.ssh/authorized_keys for sysadmins
+  authorized_key:
+    user: "{{ item }}"
+    key: "{{ lookup('file', item + '_id_rsa.pub') }}"
+    exclusive: yes
+  with_items: "{{ sysadmins }}"
+  tags: common
+
+- name: disable password authentication and root login in sshd_config
+  blockinfile:
+    dest: /etc/ssh/sshd_config
+    marker: "# {mark} ANSIBLE MANAGED BLOCK common"
+    block: |
+      PermitRootLogin no
+      Match Group wheel
+      	PasswordAuthentication no
+  register: sshd_config
+  tags: common
+
+- name: restart sshd to apply config changes
+  service: name=sshd state=restarted
+  when: sshd_config is changed
+  tags: common
+
+- name: remove ~/.ssh/authorized_keys for 'root' user
+  file:
+    path: /root/.ssh/authorized_keys
+    state: absent
+  tags: common
+
+...
