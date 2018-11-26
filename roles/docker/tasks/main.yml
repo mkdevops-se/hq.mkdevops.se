@@ -1,0 +1,56 @@
+---
+
+- name: docker-ce repo
+  yum_repository:
+    name: docker-ce-stable
+    description: Docker CE Stable - $basearch
+    baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+    gpgkey: https://download.docker.com/linux/centos/gpg
+    enabled: no
+  tags: docker
+
+- name: install docker-ce-18.06.1.ce from docker-ce
+  yum: name=docker-ce-18.06.1.ce enablerepo=docker-ce-stable state=present
+  tags: docker
+
+- name: install docker-compose-1.23.1
+  pip: name=docker-compose version=1.23.1 state=present
+  tags: docker
+
+- name: create 16g var_lib_docker for /var/lib/docker
+  lvol: vg=sys lv=var_lib_docker size=16g
+  register: var_lib_docker
+  tags: docker
+
+- name: format var_lib_docker as xfs
+  filesystem:
+    fstype: xfs
+    dev: /dev/sys/var_lib_docker
+    resizefs: yes
+    opts: -n ftype=1
+  when: var_lib_docker is changed
+  tags: docker
+
+- name: mount var_lib_docker as /var/lib/docker
+  mount:
+    path: /var/lib/docker
+    fstype: xfs
+    src: /dev/sys/var_lib_docker
+    state: mounted
+    boot: yes
+  tags: docker
+
+- name: create /etc/docker dir
+  file: path=/etc/docker owner=root group=docker state=directory
+  tags: docker
+
+- name: template docker daemon.json
+  template: src=daemon.json.j2 dest=/etc/docker/daemon.json owner=root group=docker
+  register: docker_daemon_json
+  tags: docker
+
+- name: docker (re)started and enabled
+  service: name=docker state={{ 're' if docker_daemon_json is changed else '' }}started enabled=yes
+  tags: docker
+
+...

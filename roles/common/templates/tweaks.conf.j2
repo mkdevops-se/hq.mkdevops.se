@@ -1,0 +1,10 @@
+
+# https://github.com/docker-library/redis/issues/14
+vm.overcommit_memory=1
+
+# https://github.com/docker-library/redis/issues/35
+#net.core.somaxconn=511 -> use docker-compose sysctls: net.core.somaxconn: 511 instead.
+
+# https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html#docker-cli-run-prod-mode
+vm.max_map_count=262144
+
