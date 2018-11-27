@@ -1,0 +1,73 @@
+---
+
+- name: nginx repo
+  yum_repository:
+    name: nginx
+    description: nginx repo
+    baseurl: http://nginx.org/packages/centos/$releasever/$basearch/
+    gpgkey: http://nginx.org/keys/nginx_signing.key
+    enabled: no
+  tags: nginx
+
+- name: install nginx from nginx repo
+  yum: name=nginx enablerepo=nginx state=present
+  tags: nginx
+
+- name: allow incoming http traffic (firewalld)
+  firewalld: service=http permanent=True state=enabled immediate=yes
+  tags: nginx
+
+- name: allow incoming https traffic (firewalld)
+  firewalld: service=https permanent=True state=enabled immediate=yes
+  tags: nginx
+
+- name: selinux must allow nginx proxying
+  seboolean:
+    name: httpd_can_network_connect
+    state: yes
+    persistent: yes
+  tags: nginx
+
+- name: default nginx conf removed
+  file: path=/etc/nginx/conf.d/default.conf state=absent
+  tags: nginx
+
+- name: template /etc/nginx/nginx.conf
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  notify: restart nginx
+  tags: nginx
+
+- name: template /etc/nginx/conf.d/proxy.conf
+  template:
+    src: proxy.conf.j2
+    dest: /etc/nginx/conf.d/proxy.conf
+  notify: restart nginx
+  tags: nginx
+
+- name: create let's encrypt certificate
+  include_role:
+    name: geerlingguy.certbot
+  vars:
+    certbot_admin_email: mats@mkdevops.se
+    certbot_install_from_source: true
+    certbot_create_if_missing: true
+    certbot_create_standalone_stop_services:
+      - nginx
+    certbot_certs:
+      - domains:  # Does not support multiple subdomains on same domain. :(
+        - "{{ vhost.name }}"
+    certbot_auto_renew_options: '--quiet --no-self-upgrade --pre-hook "systemctl stop nginx"
+                                 --post-hook "systemctl start nginx"'
+    certbot_auto_renew_user: root
+  loop: "{{ vhosts }}"
+  loop_control:
+    loop_var: vhost
+  tags: nginx
+
+- name: nginx running and enabled
+  service: name=nginx state=started enabled=yes
+  tags: nginx
+
+...
