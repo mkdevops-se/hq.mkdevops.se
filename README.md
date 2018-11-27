@@ -49,11 +49,24 @@ Server Baseline
 | `/dev/nvme0n1p2`                |       | `1024`    | `xfs`  | `/boot`                 |
 
 
+Hostname-Port Allocations
+-------------------------
+
+| Hostname                             | Port   | Comment                                |
+| :---                                 | ---:   | :---                                   |
+| `hq.mkdevops.se`                     | `8070` | Reserved                               |
+| `test.mkdevops.se`                   | `8071` | Reserved (misc testing)                |
+| `id.mkdevops.se`                     | `8072` | Reserved (for OAuth2 provider project) |
+| `titan-elastic.mkdevops.se`          | `8080` | Titan-Elastic benchmarking             |
+| `www.mjlife.se`                      | `8090` | mjlife.se WordPress site               |
+
+
 Getting Started
 ---------------
 
     git clone git@github.com:mkdevops-se/hq.mkdevops.se.git && cd hq.mkdevops.se/
     virtualenv venv --python=python3.6 && . venv/bin/activate
     pip install -r requirements.txt
+    ansible-galaxy install -r requirements.yml
     ansible-playbook bootstrap.yml --ask-become-pass --diff
 
