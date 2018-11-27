@@ -4,7 +4,19 @@
   hosts: all
   become: yes
   roles:
-    - common
-    - docker
+    - role: common
+
+    - role: nginx
+      vhosts:
+        - name: hq.mkdevops.se
+          local_port: 8070
+
+        - name: test.mkdevops.se
+          local_port: 8071
+
+        - name: titan-elastic.mkdevops.se
+          local_port: 8080
+
+    - role: docker
 
 ...

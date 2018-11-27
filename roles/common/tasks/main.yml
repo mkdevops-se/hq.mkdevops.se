@@ -54,7 +54,7 @@
     name: ['wget', 'zip', 'unzip', 'emacs', 'mlocate', 'bind-utils', 'pigz', 'man-pages',
            'yum-plugin-versionlock', 'lsof', 'iotop', 'rsync', 'tcpdump', 'sysstat', 'tmux',
            'policycoreutils-python', 'system-storage-manager', 'traceroute', 'bzip2', 'telnet',
-           'lynx', 'selinux-policy-sandbox', 'tree', 'createrepo']
+           'lynx', 'selinux-policy-sandbox', 'tree', 'createrepo', 'python-urllib3']
     state: present
   tags: common
 
