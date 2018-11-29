@@ -17,10 +17,6 @@
   pip: name=docker-compose version=1.23.1 state=present
   tags: docker
 
-- name: install docker-3.6.0
-  pip: name=docker version=3.6.0 state=present
-  tags: docker
-
 - name: create 16g var_lib_docker for /var/lib/docker
   lvol: vg=sys lv=var_lib_docker size=16g
   register: var_lib_docker
