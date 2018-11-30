@@ -17,6 +17,12 @@
         - name: titan-elastic.mkdevops.se
           local_port: 8080
 
+        - name: mjlife.se
+          local_port: 8090
+
+        - name: www.mjlife.se
+          local_port: 8090
+
     - role: docker
 
 ...
