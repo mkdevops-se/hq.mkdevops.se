@@ -121,12 +121,17 @@
   with_items: "{{ sysadmins }}"
   tags: common
 
+- name: assert sysadmins are named
+  fail: msg="sysadmins must be listed"
+  when: not (sysadmins | length)
+
 - name: disable password authentication and root login in sshd_config
   blockinfile:
     dest: /etc/ssh/sshd_config
     marker: "# {mark} ANSIBLE MANAGED BLOCK common"
     block: |
       PermitRootLogin no
+      AllowUsers {{ sysadmins | join(' ') }}
       Match Group wheel
       	PasswordAuthentication no
   register: sshd_config
