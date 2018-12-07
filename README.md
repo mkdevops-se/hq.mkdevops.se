@@ -34,9 +34,9 @@ Server Baseline
 
 | Volume                          | Pool  | Size (MB) | FS     | Mount Point             |
 | :---                            | :---: | ---:      | :---:  | :---                    |
-| `/dev/sys/root`                 | `sys` | `2048`    | `xfs`  | `/`                     |
+| `/dev/sys/root`                 | `sys` | `3072`    | `xfs`  | `/`                     |
 | `/dev/sys/swap`                 | `sys` | `4096`    |        |                         |
-| `/dev/sys/var_lib_docker`       | `sys` | `16384`   | `xfs`  | `/var/lib/docker`       |
+| `/dev/sys/var_lib_docker`       | `sys` | `32768`   | `xfs`  | `/var/lib/docker`       |
 | `/dev/sys/dev_shm`              | `sys` | `512`     | `xfs`  |                         |
 | `/dev/sys/home`                 | `sys` | `4096`    | `xfs`  | `/home`                 |
 | `/dev/sys/tmp`                  | `sys` | `512`     | `xfs`  | `/tmp`                  |
