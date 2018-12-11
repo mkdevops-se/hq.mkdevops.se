@@ -150,6 +150,7 @@
 
 - name: install yum-cron
   yum: name=yum-cron state=present
+  register: yum_cron_install
   tags: common
 
 - name: extend root filesystem from 2g to 3g
@@ -158,6 +159,11 @@
 
 - name: yum-cron service running and auto-starting
   service: name=yum-cron state=started enabled=yes
+  tags: common
+
+- name: re-install cronie after setting up yum-cron (locking errors)
+  shell: yum reinstall -y cronie
+  when: yum_cron_install is changed
   tags: common
 
 ...
