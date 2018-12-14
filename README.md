@@ -70,5 +70,5 @@ Getting Started
     virtualenv venv --python=python3.6 && . venv/bin/activate
     pip install -r requirements.txt
     ansible-galaxy install -r requirements.yml
-    ansible-playbook bootstrap.yml --ask-become-pass --diff
+    ansible-playbook bootstrap.yml --ask-become-pass --ask-vault-pass --diff
 
