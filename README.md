@@ -21,7 +21,7 @@ Server Baseline
 
     OS: CentOS 7.5 minimal (install 2018-11-24)
     CPUs: 4 (i5-7200 2.50 GHz, fanless)
-    Memory: 8 GB (DDR4 SDRAM, 2133 MHz)
+    Memory: 32 GB (DDR4 SDRAM, 2133 MHz)
     Disk: 256 GB SSD (Samsung)
     GPU: Intel HD Graphics 620
     Network:
