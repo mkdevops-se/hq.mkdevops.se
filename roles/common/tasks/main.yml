@@ -106,7 +106,8 @@
 
 - name: configure sysadmin accounts
   user:
-    name: "{{ item }}"
+    name: "{{ item.user }}"
+    password: "{{ item.passwd }}"
     groups: wheel
     state: present
     force: yes
@@ -115,8 +116,8 @@
 
 - name: set ~/.ssh/authorized_keys for sysadmins
   authorized_key:
-    user: "{{ item }}"
-    key: "{{ lookup('file', item + '_id_rsa.pub') }}"
+    user: "{{ item.user }}"
+    key: "{{ lookup('file', item.user + '_id_rsa.pub') }}"
     exclusive: yes
   with_items: "{{ sysadmins }}"
   tags: common
@@ -131,7 +132,7 @@
     marker: "# {mark} ANSIBLE MANAGED BLOCK common"
     block: |
       PermitRootLogin no
-      AllowUsers {{ sysadmins | join(' ') }}
+      AllowUsers {{ sysadmins | map(attribute='user') | join(' ') }}
       Match Group wheel
       	PasswordAuthentication no
   register: sshd_config
