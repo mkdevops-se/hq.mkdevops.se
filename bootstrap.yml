@@ -25,6 +25,10 @@
         - name: titan-elastic.mkdevops.se
           local_port: 8080
 
+        - name: kibana.mkdevops.se
+          local_port: 5601
+          basic_auth: yes
+
         - name: mjlife.se
           local_port: 8090
         - name: www.mjlife.se
