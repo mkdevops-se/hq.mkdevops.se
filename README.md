@@ -21,7 +21,7 @@ Server Baseline
 
     OS: CentOS 7.5 minimal (install 2018-11-24)
     CPUs: 4 (i5-7200 2.50 GHz, fanless)
-    Memory: 8 GB (DDR4 SDRAM, 2133 MHz)
+    Memory: 32 GB (DDR4 SDRAM, 2133 MHz)
     Disk: 256 GB SSD (Samsung)
     GPU: Intel HD Graphics 620
     Network:
@@ -36,7 +36,7 @@ Server Baseline
 | :---                            | :---: | ---:      | :---:  | :---                    |
 | `/dev/sys/root`                 | `sys` | `3072`    | `xfs`  | `/`                     |
 | `/dev/sys/swap`                 | `sys` | `4096`    |        |                         |
-| `/dev/sys/var_lib_docker`       | `sys` | `32768`   | `xfs`  | `/var/lib/docker`       |
+| `/dev/sys/var_lib_docker`       | `sys` | `65536`   | `xfs`  | `/var/lib/docker`       |
 | `/dev/sys/dev_shm`              | `sys` | `512`     | `xfs`  |                         |
 | `/dev/sys/home`                 | `sys` | `4096`    | `xfs`  | `/home`                 |
 | `/dev/sys/tmp`                  | `sys` | `512`     | `xfs`  | `/tmp`                  |
@@ -57,7 +57,9 @@ Hostname-Port Allocations
 | `hq.mkdevops.se`                     | `8070` | Reserved                               |
 | `test.mkdevops.se`                   | `8071` | Reserved (misc testing)                |
 | `id.mkdevops.se`                     | `8072` | Reserved (for OAuth2 provider project) |
+| `www.mkdevops.se`                    | `8073` | mkdevops.se WordPress site             |
 | `titan-elastic.mkdevops.se`          | `8080` | Titan-Elastic benchmarking             |
+| `kibana.mkdevops.se`                 | `5601` | Kibana setup for Titan-Elastic         |
 | `www.mjlife.se`                      | `8090` | mjlife.se WordPress site               |
 
 
@@ -68,5 +70,7 @@ Getting Started
     virtualenv venv --python=python3.6 && . venv/bin/activate
     pip install -r requirements.txt
     ansible-galaxy install -r requirements.yml
+    echo theSecretAnsibleVaultPassword > .vault-pass
+    chmod og-r .vault-pass
     ansible-playbook bootstrap.yml --ask-become-pass --diff
 

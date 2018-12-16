@@ -105,3 +105,6 @@ venv.bak/
 
 # Galaxy roles
 roles/geerlingguy.certbot
+
+# Ansible Vault
+.vault-pass
