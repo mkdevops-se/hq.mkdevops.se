@@ -192,4 +192,8 @@
   service: name=yum-cron state=started enabled=yes
   tags: common
 
+- name: extend home filesystem from 4g to 64g
+  lvol: vg=sys lv=home size=64g resizefs=yes
+  tags: common
+
 ...
