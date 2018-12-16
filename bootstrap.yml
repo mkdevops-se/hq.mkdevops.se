@@ -24,6 +24,7 @@
 
         - name: titan-elastic.mkdevops.se
           local_port: 8080
+          max_upload_size: 16M
 
         - name: kibana.mkdevops.se
           local_port: 5601
