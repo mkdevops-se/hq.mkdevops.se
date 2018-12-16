@@ -104,6 +104,19 @@
   pip: name=pip version=18.1 state=present
   tags: common
 
+- name: install centos-release-scl
+  yum: name=centos-release-scl state=present
+  tags: common
+
+- name: install python36 from scl
+  yum: name=rh-python36 state=present
+  tags: common
+
+- name: install scl pip-18.1
+  shell: scl enable rh-python36 "pip install pip==18.1"
+  register: scl_pip_install
+  changed_when: scl_pip_install.stdout.find('already satisfied') == -1
+
 - name: configure sysadmin accounts
   user:
     name: "{{ item.user }}"
