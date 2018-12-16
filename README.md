@@ -36,7 +36,7 @@ Server Baseline
 | :---                            | :---: | ---:      | :---:  | :---                    |
 | `/dev/sys/root`                 | `sys` | `3072`    | `xfs`  | `/`                     |
 | `/dev/sys/swap`                 | `sys` | `4096`    |        |                         |
-| `/dev/sys/var_lib_docker`       | `sys` | `65536`   | `xfs`  | `/var/lib/docker`       |
+| `/dev/sys/var_lib_docker`       | `sys` | `98304`   | `xfs`  | `/var/lib/docker`       |
 | `/dev/sys/dev_shm`              | `sys` | `512`     | `xfs`  |                         |
 | `/dev/sys/home`                 | `sys` | `65536`   | `xfs`  | `/home`                 |
 | `/dev/sys/tmp`                  | `sys` | `512`     | `xfs`  | `/tmp`                  |
