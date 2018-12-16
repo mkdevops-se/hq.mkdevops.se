@@ -19,6 +19,10 @@ server {
     charset        utf-8;
     gzip           on;
 
+    {% if vhost.max_upload_size is defined -%}
+    client_max_body_size {{ vhost.max_upload_size }};
+    {% endif %}
+
     ssl                  on;
     ssl_certificate      /etc/letsencrypt/live/{{ vhost.name }}/fullchain.pem;
     ssl_certificate_key  /etc/letsencrypt/live/{{ vhost.name }}/privkey.pem;
