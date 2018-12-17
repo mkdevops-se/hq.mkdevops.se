@@ -17,8 +17,8 @@
   pip: name=docker-compose version=1.23.1 state=present
   tags: docker
 
-- name: create 96g var_lib_docker for /var/lib/docker
-  lvol: vg=sys lv=var_lib_docker size=96g resizefs=yes
+- name: create 128g var_lib_docker for /var/lib/docker
+  lvol: vg=sys lv=var_lib_docker size=128g resizefs=yes
   register: var_lib_docker
   tags: docker
 
