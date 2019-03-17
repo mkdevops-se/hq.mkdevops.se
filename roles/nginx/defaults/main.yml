@@ -1,7 +1,7 @@
 ---
 
-vhosts: []  # Supports a list of {'name': <hostname>, 'local_port': <port>, 'basic_auth': <yes/no>}
-            # dicts.
+vhosts: []  # Supports a list of `{'name': <hostname>, 'local_port': <port>, 'local_path': <path>,
+            # 'basic_auth': <yes/no>}` dicts.
 
 htpasswd_accounts:
   - user: vtepliuk

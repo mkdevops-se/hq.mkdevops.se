@@ -17,6 +17,15 @@
   yum: name=httpd-tools state=present
   tags: nginx
 
+- name: ensure vhost root paths exist as symlinks to local_path (or /dev/null as fallback)
+  file:
+    dest: /usr/share/nginx/html/{{ item.name }}
+    src: "{{ item.local_path | default('/dev/null') }}"
+    state: link
+    force: yes
+  with_items: "{{ vhosts }}"
+  tags: nginx
+
 - name: allow incoming http traffic (firewalld)
   firewalld: service=http permanent=True state=enabled immediate=yes
   tags: nginx
@@ -52,6 +61,9 @@
 - name: create let's encrypt certificate
   include_role:
     name: geerlingguy.certbot
+    apply:
+      tags:
+        - nginx
   vars:
     certbot_admin_email: mats@mkdevops.se
     certbot_install_from_source: true
@@ -69,10 +81,14 @@
     loop_var: vhost
   tags: nginx
 
-- name: template /etc/nginx/conf.d/proxy.conf
+- name: remove /etc/nginx/conf.d/proxy.conf
+  file: path=/etc/nginx/conf.d/proxy.conf state=absent
+  tags: nginx
+
+- name: template /etc/nginx/conf.d/server.conf
   template:
-    src: proxy.conf.j2
-    dest: /etc/nginx/conf.d/proxy.conf
+    src: server.conf.j2
+    dest: /etc/nginx/conf.d/server.conf
   notify: restart nginx
   tags: nginx
 
