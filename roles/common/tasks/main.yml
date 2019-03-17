@@ -80,6 +80,25 @@
   yum: name=git2u enablerepo=ius state=present
   tags: common
 
+- name: check for git-lfs
+  shell: git lfs version
+  register: check_git_lfs_version
+  ignore_errors: yes
+  changed_when: no
+  tags: common
+
+- block:
+    - name: run git lfs install script
+      shell: bash -ilc "curl -s
+             https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | bash"
+      tags: common
+
+    - name: yum intall git-lfs
+      shell: yum install -y git-lfs && git lfs install
+      tags: common
+
+  when: check_git_lfs_version is failed
+
 - name: epel repo
   yum_repository:
     name: epel
