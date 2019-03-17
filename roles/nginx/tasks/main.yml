@@ -81,10 +81,6 @@
     loop_var: vhost
   tags: nginx
 
-- name: remove /etc/nginx/conf.d/proxy.conf
-  file: path=/etc/nginx/conf.d/proxy.conf state=absent
-  tags: nginx
-
 - name: template /etc/nginx/conf.d/server.conf
   template:
     src: server.conf.j2

@@ -95,6 +95,8 @@
 
     - name: yum intall git-lfs
       shell: yum install -y git-lfs && git lfs install
+      args:
+        warn: no
       tags: common
 
   when: check_git_lfs_version is failed
