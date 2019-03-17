@@ -137,7 +137,7 @@
   yum: name=rh-python36 state=present
   tags: common
 
-- name: install scl pip-18.1cd
+- name: install scl pip-18.1
   shell: scl enable rh-python36 "pip install pip==18.1"
   register: scl_pip_install
   changed_when: scl_pip_install.stdout.find('already satisfied') == -1
