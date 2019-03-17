@@ -39,6 +39,10 @@
           local_port: 8090
           max_upload_size: 32M
 
+        - name: staging.stockholmsaltspa.com
+          local_port: 8091
+          max_upload_size: 32M
+
     - role: docker
 
 ...

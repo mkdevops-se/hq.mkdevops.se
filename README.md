@@ -61,13 +61,14 @@ Hostname-Port Allocations
 | `titan-elastic.mkdevops.se`          | `8080` | Titan-Elastic benchmarking             |
 | `kibana.mkdevops.se`                 | `5601` | Kibana setup for Titan-Elastic         |
 | `www.mjlife.se`                      | `8090` | mjlife.se WordPress site               |
+| `staging.stockholmsaltspa.com`       | `8091` | staging.stockholmsaltspa.com WP site   |
 
 
 Getting Started
 ---------------
 
     git clone git@github.com:mkdevops-se/hq.mkdevops.se.git && cd hq.mkdevops.se/
-    virtualenv venv --python=python3.6 && . venv/bin/activate
+    python3 -m venv venv && . venv/bin/activate
     pip install -r requirements.txt
     ansible-galaxy install -r requirements.yml
     echo theSecretAnsibleVaultPassword > .vault-pass
