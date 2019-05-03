@@ -129,6 +129,10 @@
   pip: name=awscli state=present
   tags: common
 
+- name: install passlib
+  pip: name=passlib state=present
+  tags: common
+
 - name: install centos-release-scl
   yum: name=centos-release-scl state=present
   tags: common
