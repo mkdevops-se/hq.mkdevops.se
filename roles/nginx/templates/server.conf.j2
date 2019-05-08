@@ -43,7 +43,7 @@ server {
         {% endif -%}
 
         {% if vhost.proxy_buffering is defined -%}
-        proxy_buffering off;
+        proxy_buffering {{ 'off' if not vhost.proxy_buffering else 'on' }};
         {% endif -%}
 
         root /usr/share/nginx/html/{{ vhost.name }};
