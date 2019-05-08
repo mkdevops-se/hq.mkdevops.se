@@ -42,6 +42,7 @@
         - name: staging.stockholmsaltspa.com
           local_port: 8091
           max_upload_size: 32M
+          proxy_buffering: no
 
     - role: docker
 
