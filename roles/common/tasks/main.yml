@@ -217,12 +217,20 @@
   lvol: vg=sys lv=root size=3g resizefs=yes
   tags: common
 
+- name: extend var filesystem from 1g to 2g
+  lvol: vg=sys lv=var size=2g resizefs=yes
+  tags: common
+
+- name: extend var_log filesystem from 512m to 1g
+  lvol: vg=sys lv=var_log size=1g resizefs=yes
+  tags: common
+
 - name: yum-cron service running and auto-starting
   service: name=yum-cron state=started enabled=yes
   tags: common
 
-- name: extend home filesystem from 4g to 64g
-  lvol: vg=sys lv=home size=64g resizefs=yes
+- name: extend home filesystem from 4g to 96g
+  lvol: vg=sys lv=home size=96g resizefs=yes
   tags: common
 
 ...

@@ -38,11 +38,11 @@ Server Baseline
 | `/dev/sys/swap`                 | `sys` | `4096`    |        |                         |
 | `/dev/sys/var_lib_docker`       | `sys` | `32768`   | `xfs`  | `/var/lib/docker`       |
 | `/dev/sys/dev_shm`              | `sys` | `512`     | `xfs`  |                         |
-| `/dev/sys/home`                 | `sys` | `65536`   | `xfs`  | `/home`                 |
+| `/dev/sys/home`                 | `sys` | `98304`   | `xfs`  | `/home`                 |
 | `/dev/sys/tmp`                  | `sys` | `512`     | `xfs`  | `/tmp`                  |
 | `/dev/sys/opt`                  | `sys` | `512`     | `xfs`  | `/opt`                  |
-| `/dev/sys/var`                  | `sys` | `1024`    | `xfs`  | `/var`                  |
-| `/dev/sys/var_log`              | `sys` | `512`     | `xfs`  | `/var/log`              |
+| `/dev/sys/var`                  | `sys` | `2048`    | `xfs`  | `/var`                  |
+| `/dev/sys/var_log`              | `sys` | `1024`    | `xfs`  | `/var/log`              |
 | `/dev/sys/var_tmp`              | `sys` | `256`     | `xfs`  | `/var/tmp`              |
 | `/dev/sys/var_log_audit`        | `sys` | `512`     | `xfs`  | `/var/log/audit`        |
 | `/dev/nvme0n1p1`                |       | `200`     | `vfat` | `/boot/efi`             |
