@@ -58,7 +58,7 @@ Hostname-Port Allocations
 | `test.mkdevops.se`                   | `8071` | Reserved (misc testing)                |
 | `id.mkdevops.se`                     | `8072` | Reserved (for OAuth2 provider project) |
 | `www.mkdevops.se`                    | `8073` | mkdevops.se WordPress site             |
-| `titan-elastic.mkdevops.se`          | `8080` | Titan-Elastic benchmarking             |
+| `konfigurator.mkdevops.se`           | `3000` | See `mkdevops-se/konfigurator` project |
 | `kibana.mkdevops.se`                 | `5601` | Kibana setup for Titan-Elastic         |
 | `www.mjlife.se`                      | `8090` | mjlife.se WordPress site               |
 | `staging.stockholmsaltspa.com`       | `8091` | staging.stockholmsaltspa.com WP site   |

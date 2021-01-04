@@ -24,8 +24,8 @@
           local_port: 8073
           max_upload_size: 32M
 
-        - name: titan-elastic.mkdevops.se
-          local_port: 8080
+        - name: konfigurator.mkdevops.se
+          local_port: 3000
           max_upload_size: 16M
 
         - name: kibana.mkdevops.se
