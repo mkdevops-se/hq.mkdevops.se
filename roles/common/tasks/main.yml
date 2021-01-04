@@ -121,6 +121,16 @@
     state: present
   tags: common
 
+- name: configure pip to disable version check
+  blockinfile:
+    path: /etc/pip.conf
+    create: yes
+    marker: "# {mark} ANSIBLE MANAGED BLOCK common"
+    block: |
+      [global]
+      disable-pip-version-check = True
+  tags: common
+
 - name: install pip-18.1
   pip: name=pip version=18.1 state=present
   tags: common
@@ -141,10 +151,23 @@
   yum: name=rh-python36 state=present
   tags: common
 
-- name: install scl pip-18.1
-  shell: scl enable rh-python36 "pip install pip==18.1"
+- name: install scl pip-20 for rh-python36
+  shell: scl enable rh-python36 "python3 -m pip install pip==20.3.3"
   register: scl_pip_install
   changed_when: scl_pip_install.stdout.find('already satisfied') == -1
+  tags: common
+
+- name: install rh-python38
+  yum:
+    name: rh-python38
+    state: present
+  tags: common
+
+- name: install scl pip-20 for rh-python38
+  shell: scl enable rh-python38 "python3 -m pip install pip==20.3.3"
+  register: scl_pip_install
+  changed_when: scl_pip_install.stdout.find('already satisfied') == -1
+  tags: common
 
 - name: configure sysadmin accounts
   user:
