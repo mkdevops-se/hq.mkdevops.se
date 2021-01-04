@@ -221,8 +221,8 @@
   lvol: vg=sys lv=var size=2g resizefs=yes
   tags: common
 
-- name: extend var_log filesystem from 512m to 1g
-  lvol: vg=sys lv=var_log size=1g resizefs=yes
+- name: extend var_log filesystem from 512m to 2g
+  lvol: vg=sys lv=var_log size=2g resizefs=yes
   tags: common
 
 - name: yum-cron service running and auto-starting

@@ -42,7 +42,7 @@ Server Baseline
 | `/dev/sys/tmp`                  | `sys` | `512`     | `xfs`  | `/tmp`                  |
 | `/dev/sys/opt`                  | `sys` | `512`     | `xfs`  | `/opt`                  |
 | `/dev/sys/var`                  | `sys` | `2048`    | `xfs`  | `/var`                  |
-| `/dev/sys/var_log`              | `sys` | `1024`    | `xfs`  | `/var/log`              |
+| `/dev/sys/var_log`              | `sys` | `2048`    | `xfs`  | `/var/log`              |
 | `/dev/sys/var_tmp`              | `sys` | `256`     | `xfs`  | `/var/tmp`              |
 | `/dev/sys/var_log_audit`        | `sys` | `512`     | `xfs`  | `/var/log/audit`        |
 | `/dev/nvme0n1p1`                |       | `200`     | `vfat` | `/boot/efi`             |
