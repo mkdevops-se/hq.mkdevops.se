@@ -213,6 +213,12 @@
   yum: name=yum-cron state=present
   tags: common
 
+- name: template /etc/yum/yum-cron.conf
+  template:
+    src: yum-cron.conf.j2
+    dest: /etc/yum/yum-cron.conf
+  tags: common
+
 - name: extend root filesystem from 2g to 3g
   lvol: vg=sys lv=root size=3g resizefs=yes
   tags: common
