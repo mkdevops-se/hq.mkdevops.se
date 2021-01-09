@@ -169,6 +169,12 @@
   changed_when: scl_pip_install.stdout.find('already satisfied') == -1
   tags: common
 
+- name: install rh-nodejs12
+  yum:
+    name: rh-nodejs12
+    state: present
+  tags: common
+
 - name: configure sysadmin accounts
   user:
     name: "{{ item.user }}"
