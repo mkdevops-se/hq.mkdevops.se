@@ -25,8 +25,8 @@ Server Baseline
     Disk: 256 GB SSD (Samsung)
     GPU: Intel HD Graphics 620
     Network:
-      - enp3s0, Gigabit Ethernet
-      - enp0s31f6, Gigabit Ethernet (default)
+      - enp3s0, Gigabit Ethernet (default)
+      - enp0s31f6, Gigabit Ethernet
       - wlp2s0, 802.11ac
 
 

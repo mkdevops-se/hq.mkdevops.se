@@ -214,17 +214,29 @@
 - name: assert sysadmins are named
   fail: msg="sysadmins must be listed"
   when: not (sysadmins | length)
+  tags: common
+
+- name: allow incoming ssh traffic (firewalld)
+  ansible.posix.firewalld: port={{ sshd_port }}/tcp permanent=True state=enabled immediate=yes
+  tags: common
 
 - name: disable password authentication and root login in sshd_config
   blockinfile:
     dest: /etc/ssh/sshd_config
     marker: "# {mark} ANSIBLE MANAGED BLOCK common"
     block: |
+      Port {{ sshd_port }}
       PermitRootLogin no
       AllowUsers {{ sysadmins | map(attribute='user') | join(' ') }}
       Match Group wheel
       	PasswordAuthentication no
   register: sshd_config
+  tags: common
+
+- name: update selinux to allow ssh port {{ sshd_port }}
+  shell: semanage port -a -t ssh_port_t -p tcp {{ sshd_port }}
+  when: sshd_config is changed
+  ignore_errors: yes
   tags: common
 
 - name: restart sshd to apply config changes
