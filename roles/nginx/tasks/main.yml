@@ -27,11 +27,11 @@
   tags: nginx
 
 - name: allow incoming http traffic (firewalld)
-  firewalld: service=http permanent=True state=enabled immediate=yes
+  ansible.posix.firewalld: service=http permanent=True state=enabled immediate=yes
   tags: nginx
 
 - name: allow incoming https traffic (firewalld)
-  firewalld: service=https permanent=True state=enabled immediate=yes
+  ansible.posix.firewalld: service=https permanent=True state=enabled immediate=yes
   tags: nginx
 
 - name: selinux must allow nginx proxying
