@@ -66,7 +66,7 @@
         - nginx
   vars:
     certbot_admin_email: mats@mkdevops.se
-    certbot_install_from_source: true
+    certbot_install_method: snap
     certbot_create_if_missing: true
     certbot_create_standalone_stop_services:
       - nginx

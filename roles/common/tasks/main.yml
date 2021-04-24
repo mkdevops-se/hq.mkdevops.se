@@ -121,6 +121,29 @@
     state: present
   tags: common
 
+- name: install snapd
+  yum: name=snapd enablerepo=epel state=present
+  register: snapd_install
+  tags: common
+
+- name: enable classic snap support
+  file:
+    src: /var/lib/snapd/snap
+    dest: /snap
+    state: link
+  tags: common
+
+- name: snapd running and enabled
+  service: name=snapd state=started enabled=yes
+  tags: common
+
+- name: update snap after install
+  shell: snap install core; snap refresh core
+  changed_when: true
+  failed_when: false
+  when: snapd_install is changed
+  tags: common
+
 - name: configure pip to disable version check
   blockinfile:
     path: /etc/pip.conf
