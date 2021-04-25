@@ -68,16 +68,14 @@
 - name: ius repo
   yum_repository:
     name: ius
-    description: IUS Community Packages for Enterprise Linux {{
-                 ansible_distribution_major_version }} - $basearch
-    mirrorlist: https://mirrors.iuscommunity.org/mirrorlist?repo=ius-centos{{
-                ansible_distribution_major_version }}&arch=$basearch&protocol=http
-    gpgkey: https://dl.iuscommunity.org/pub/ius/IUS-COMMUNITY-GPG-KEY
+    description: IUS for Enterprise Linux {{ ansible_distribution_major_version }} - $basearch
+    baseurl: https://repo.ius.io/{{ ansible_distribution_major_version }}/$basearch/
+    gpgkey: https://repo.ius.io/RPM-GPG-KEY-IUS-7
     enabled: no
   tags: common
 
-- name: install modern git version from ius
-  yum: name=git2u enablerepo=ius state=present
+- name: install ius git224 (2.x)
+  yum: name=git224 enablerepo=ius state=present
   tags: common
 
 - name: check for git-lfs
@@ -90,16 +88,13 @@
 - block:
     - name: run git lfs install script
       shell: bash -ilc "curl -s
-             https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | bash"
-      tags: common
-
-    - name: yum intall git-lfs
+        https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | bash"
+    - name: yum install git-lfs
       shell: yum install -y git-lfs && git lfs install
       args:
         warn: no
-      tags: common
-
   when: check_git_lfs_version is failed
+  tags: common
 
 - name: epel repo
   yum_repository:
@@ -170,20 +165,8 @@
   yum: name=centos-release-scl state=present
   tags: common
 
-- name: install python36 from scl
-  yum: name=rh-python36 state=present
-  tags: common
-
-#- name: install scl pip-20 for rh-python36
-#  shell: scl enable rh-python36 "python3 -m pip install pip==20.3.3"
-#  register: scl_pip_install
-#  changed_when: scl_pip_install.stdout.find('already satisfied') == -1
-#  tags: common
-
-- name: install rh-python38
-  yum:
-    name: rh-python38
-    state: present
+- name: install python38 from scl
+  yum: name=rh-python38 state=present
   tags: common
 
 #- name: install scl pip-20 for rh-python38
