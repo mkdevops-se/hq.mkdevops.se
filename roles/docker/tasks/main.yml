@@ -4,7 +4,7 @@
   yum_repository:
     name: docker-ce-stable
     description: Docker CE Stable - $basearch
-    baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+    baseurl: https://download.docker.com/linux/centos/$releasever/$basearch/stable
     gpgkey: https://download.docker.com/linux/centos/gpg
     enabled: no
   tags: docker
@@ -17,8 +17,8 @@
   pip: name=docker-compose version=1.23.1 state=present
   tags: docker
 
-- name: create 32g var_lib_docker for /var/lib/docker
-  lvol: vg=sys lv=var_lib_docker size=32g resizefs=yes
+- name: create 64g var_lib_docker for /var/lib/docker
+  lvol: vg=sys lv=var_lib_docker size=64g resizefs=yes
   register: var_lib_docker
   tags: docker
 
