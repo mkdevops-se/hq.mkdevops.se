@@ -54,7 +54,7 @@
     name: ['wget', 'zip', 'unzip', 'emacs', 'mlocate', 'bind-utils', 'pigz', 'man-pages',
            'yum-plugin-versionlock', 'lsof', 'iotop', 'rsync', 'tcpdump', 'sysstat', 'tmux',
            'policycoreutils-python', 'system-storage-manager', 'traceroute', 'bzip2', 'telnet',
-           'lynx', 'selinux-policy-sandbox', 'tree', 'createrepo', 'python-urllib3']
+           'lynx', 'selinux-policy-sandbox', 'tree', 'createrepo']
     state: present
   tags: common
 
@@ -154,9 +154,9 @@
       disable-pip-version-check = True
   tags: common
 
-- name: install pip-18.1
-  pip: name=pip version=18.1 state=present
-  tags: common
+#- name: install pip-18.1
+#  pip: name=pip version=18.1 state=present
+#  tags: common
 
 - name: install awscli
   pip: name=awscli state=present
@@ -174,11 +174,11 @@
   yum: name=rh-python36 state=present
   tags: common
 
-- name: install scl pip-20 for rh-python36
-  shell: scl enable rh-python36 "python3 -m pip install pip==20.3.3"
-  register: scl_pip_install
-  changed_when: scl_pip_install.stdout.find('already satisfied') == -1
-  tags: common
+#- name: install scl pip-20 for rh-python36
+#  shell: scl enable rh-python36 "python3 -m pip install pip==20.3.3"
+#  register: scl_pip_install
+#  changed_when: scl_pip_install.stdout.find('already satisfied') == -1
+#  tags: common
 
 - name: install rh-python38
   yum:
@@ -186,11 +186,11 @@
     state: present
   tags: common
 
-- name: install scl pip-20 for rh-python38
-  shell: scl enable rh-python38 "python3 -m pip install pip==20.3.3"
-  register: scl_pip_install
-  changed_when: scl_pip_install.stdout.find('already satisfied') == -1
-  tags: common
+#- name: install scl pip-20 for rh-python38
+#  shell: scl enable rh-python38 "python3 -m pip install pip==20.3.3"
+#  register: scl_pip_install
+#  changed_when: scl_pip_install.stdout.find('already satisfied') == -1
+#  tags: common
 
 - name: install rh-nodejs12
   yum:
