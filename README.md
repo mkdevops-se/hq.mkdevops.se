@@ -33,20 +33,20 @@ Server Baseline
 *LVM Partitioning:*
 
 | Volume                          | Pool  | Size (MB) | FS     | Mount Point             |
-| :---                            | :---: | ---:      | :---:  | :---                    |
-| `/dev/sys/root`                 | `sys` | `3072`    | `xfs`  | `/`                     |
-| `/dev/sys/swap`                 | `sys` | `4096`    |        |                         |
-| `/dev/sys/var_lib_docker`       | `sys` | `65536`   | `xfs`  | `/var/lib/docker`       |
-| `/dev/sys/dev_shm`              | `sys` | `512`     | `xfs`  |                         |
-| `/dev/sys/home`                 | `sys` | `98304`   | `xfs`  | `/home`                 |
-| `/dev/sys/tmp`                  | `sys` | `512`     | `xfs`  | `/tmp`                  |
-| `/dev/sys/opt`                  | `sys` | `512`     | `xfs`  | `/opt`                  |
-| `/dev/sys/var`                  | `sys` | `2048`    | `xfs`  | `/var`                  |
-| `/dev/sys/var_log`              | `sys` | `2048`    | `xfs`  | `/var/log`              |
-| `/dev/sys/var_tmp`              | `sys` | `256`     | `xfs`  | `/var/tmp`              |
-| `/dev/sys/var_log_audit`        | `sys` | `512`     | `xfs`  | `/var/log/audit`        |
-| `/dev/nvme0n1p1`                |       | `200`     | `vfat` | `/boot/efi`             |
-| `/dev/nvme0n1p2`                |       | `1024`    | `xfs`  | `/boot`                 |
+| :---                            | :---: |----------:| :---:  | :---                    |
+| `/dev/sys/root`                 | `sys` |    `4096` | `xfs`  | `/`                     |
+| `/dev/sys/swap`                 | `sys` |    `4096` |        |                         |
+| `/dev/sys/var_lib_docker`       | `sys` |   `65536` | `xfs`  | `/var/lib/docker`       |
+| `/dev/sys/dev_shm`              | `sys` |     `512` | `xfs`  |                         |
+| `/dev/sys/home`                 | `sys` |   `98304` | `xfs`  | `/home`                 |
+| `/dev/sys/tmp`                  | `sys` |     `512` | `xfs`  | `/tmp`                  |
+| `/dev/sys/opt`                  | `sys` |     `512` | `xfs`  | `/opt`                  |
+| `/dev/sys/var`                  | `sys` |    `2048` | `xfs`  | `/var`                  |
+| `/dev/sys/var_log`              | `sys` |    `2048` | `xfs`  | `/var/log`              |
+| `/dev/sys/var_tmp`              | `sys` |     `256` | `xfs`  | `/var/tmp`              |
+| `/dev/sys/var_log_audit`        | `sys` |     `512` | `xfs`  | `/var/log/audit`        |
+| `/dev/nvme0n1p1`                |       |     `200` | `vfat` | `/boot/efi`             |
+| `/dev/nvme0n1p2`                |       |    `1024` | `xfs`  | `/boot`                 |
 
 
 Hostname-Port Allocations
@@ -60,8 +60,6 @@ Hostname-Port Allocations
 | `www.mkdevops.se`                    | `8073` | mkdevops.se WordPress site             |
 | `konfigurator.mkdevops.se`           | `3000` | See `mkdevops-se/konfigurator` project |
 | `kibana.mkdevops.se`                 | `5601` | Kibana setup for Titan-Elastic         |
-| `www.mjlife.se`                      | `8090` | mjlife.se WordPress site               |
-| `staging.stockholmsaltspa.com`       | `8091` | staging.stockholmsaltspa.com WP site   |
 
 
 Getting Started

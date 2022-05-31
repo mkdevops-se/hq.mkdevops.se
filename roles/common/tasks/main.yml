@@ -154,7 +154,7 @@
 #  tags: common
 
 - name: install awscli
-  pip: name=awscli state=present
+  pip: name=awscli~=1.19.0 state=present
   tags: common
 
 - name: install passlib
@@ -178,6 +178,12 @@
 - name: install rh-nodejs12
   yum:
     name: rh-nodejs12
+    state: present
+  tags: common
+
+- name: install rh-nodejs14
+  yum:
+    name: rh-nodejs14
     state: present
   tags: common
 
@@ -266,8 +272,8 @@
     dest: /etc/yum/yum-cron.conf
   tags: common
 
-- name: extend root filesystem from 2g to 3g
-  lvol: vg=sys lv=root size=3g resizefs=yes
+- name: extend root filesystem from 2g to 4g
+  lvol: vg=sys lv=root size=4g resizefs=yes
   tags: common
 
 - name: extend var filesystem from 1g to 2g

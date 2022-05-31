@@ -32,18 +32,6 @@
           local_port: 5601
           basic_auth: yes
 
-        - name: mjlife.se
-          local_port: 8090
-          max_upload_size: 32M
-        - name: www.mjlife.se
-          local_port: 8090
-          max_upload_size: 32M
-
-        - name: staging.stockholmsaltspa.com
-          local_port: 8091
-          max_upload_size: 32M
-          proxy_buffering: no
-
     - role: docker
 
 ...
