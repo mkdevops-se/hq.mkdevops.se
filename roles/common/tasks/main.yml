@@ -74,8 +74,22 @@
     enabled: no
   tags: common
 
-- name: install ius git224 (2.x)
-  yum: name=git224 enablerepo=ius state=present
+- name: uninstall ius git224 (2.x)
+  yum: name=git224-core enablerepo=ius state=absent
+  tags: common
+
+- name: install ius git236 (2.x)
+  yum: name=git236 enablerepo=ius state=present
+  ignore_errors: yes
+  register: install_ius_git236
+  tags: common
+
+- block:
+    - name: uninstall git (1.8)
+      yum: name=git state=absent
+    - name: install ius git236 (2.x)
+      yum: name=git236 enablerepo=ius state=present
+  when: install_ius_git236 is failed
   tags: common
 
 - name: check for git-lfs
