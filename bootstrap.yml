@@ -23,6 +23,9 @@
         - name: www.mkdevops.se
           local_port: 8073
           max_upload_size: 32M
+        - name: staging-www.mkdevops.se
+          local_port: 8074
+          max_upload_size: 32M
 
         - name: konfigurator.mkdevops.se
           local_port: 3000
