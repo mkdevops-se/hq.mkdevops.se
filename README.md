@@ -52,14 +52,15 @@ Server Baseline
 Hostname-Port Allocations
 -------------------------
 
-| Hostname                             | Port   | Comment                                |
-| :---                                 | ---:   | :---                                   |
-| `hq.mkdevops.se`                     | `8070` | Reserved                               |
-| `test.mkdevops.se`                   | `8071` | Reserved (misc testing)                |
-| `id.mkdevops.se`                     | `8072` | Reserved (for OAuth2 provider project) |
-| `www.mkdevops.se`                    | `8073` | mkdevops.se WordPress site             |
-| `konfigurator.mkdevops.se`           | `3000` | See `mkdevops-se/konfigurator` project |
-| `kibana.mkdevops.se`                 | `5601` | Kibana setup for Titan-Elastic         |
+| Hostname                   |   Port | Comment                                |
+|:---------------------------|-------:|:---------------------------------------|
+| `hq.mkdevops.se`           | `8070` | Reserved                               |
+| `test.mkdevops.se`         | `8071` | Reserved (misc testing)                |
+| `id.mkdevops.se`           | `8072` | Reserved (for OAuth2 provider project) |
+| `www.mkdevops.se`          | `8073` | www.mkdevops.se WordPress site         |
+| `staging-www.mkdevops.se`  | `8074` | www.mkdevops.se WordPress staging site |
+| `konfigurator.mkdevops.se` | `3000` | See `mkdevops-se/konfigurator` project |
+| `kibana.mkdevops.se`       | `5601` | Kibana setup for Titan-Elastic         |
 
 
 Getting Started
