@@ -100,6 +100,9 @@ venv.bak/
 # IntelliJ project settings
 .idea
 
+# OS files
+.DS_Store
+
 # mkdocs documentation
 /site
 
@@ -110,4 +113,4 @@ venv.bak/
 roles/geerlingguy.certbot
 
 # Ansible Vault
-.vault-pass
+.ansible_vault_password

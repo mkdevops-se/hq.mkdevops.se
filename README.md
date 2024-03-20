@@ -1,6 +1,6 @@
 
-hq.mkdevops.se
-==============
+`hq.mkdevops.se`
+================
 
 Ansible bootstrapping for bare-metal `hq.mkdevops.se` server.
 
@@ -32,21 +32,21 @@ Server Baseline
 
 *LVM Partitioning:*
 
-| Volume                          | Pool  | Size (MB) | FS     | Mount Point             |
-| :---                            | :---: |----------:| :---:  | :---                    |
-| `/dev/sys/root`                 | `sys` |    `4096` | `xfs`  | `/`                     |
-| `/dev/sys/swap`                 | `sys` |    `4096` |        |                         |
-| `/dev/sys/var_lib_docker`       | `sys` |   `65536` | `xfs`  | `/var/lib/docker`       |
-| `/dev/sys/dev_shm`              | `sys` |     `512` | `xfs`  |                         |
-| `/dev/sys/home`                 | `sys` |   `98304` | `xfs`  | `/home`                 |
-| `/dev/sys/tmp`                  | `sys` |     `512` | `xfs`  | `/tmp`                  |
-| `/dev/sys/opt`                  | `sys` |    `4096` | `xfs`  | `/opt`                  |
-| `/dev/sys/var`                  | `sys` |    `2048` | `xfs`  | `/var`                  |
-| `/dev/sys/var_log`              | `sys` |    `2048` | `xfs`  | `/var/log`              |
-| `/dev/sys/var_tmp`              | `sys` |     `256` | `xfs`  | `/var/tmp`              |
-| `/dev/sys/var_log_audit`        | `sys` |     `512` | `xfs`  | `/var/log/audit`        |
-| `/dev/nvme0n1p1`                |       |     `200` | `vfat` | `/boot/efi`             |
-| `/dev/nvme0n1p2`                |       |    `1024` | `xfs`  | `/boot`                 |
+| Volume                    | Pool  | Size (MB) |   FS   | Mount Point       |
+|:--------------------------|:-----:|----------:|:------:|:------------------|
+| `/dev/sys/root`           | `sys` |    `4096` | `xfs`  | `/`               |
+| `/dev/sys/swap`           | `sys` |    `4096` |        |                   |
+| `/dev/sys/var_lib_docker` | `sys` |   `65536` | `xfs`  | `/var/lib/docker` |
+| `/dev/sys/dev_shm`        | `sys` |     `512` | `xfs`  |                   |
+| `/dev/sys/home`           | `sys` |   `98304` | `xfs`  | `/home`           |
+| `/dev/sys/tmp`            | `sys` |     `512` | `xfs`  | `/tmp`            |
+| `/dev/sys/opt`            | `sys` |    `4096` | `xfs`  | `/opt`            |
+| `/dev/sys/var`            | `sys` |    `2048` | `xfs`  | `/var`            |
+| `/dev/sys/var_log`        | `sys` |    `2048` | `xfs`  | `/var/log`        |
+| `/dev/sys/var_tmp`        | `sys` |     `256` | `xfs`  | `/var/tmp`        |
+| `/dev/sys/var_log_audit`  | `sys` |     `512` | `xfs`  | `/var/log/audit`  |
+| `/dev/nvme0n1p1`          |       |     `200` | `vfat` | `/boot/efi`       |
+| `/dev/nvme0n1p2`          |       |    `1024` | `xfs`  | `/boot`           |
 
 
 Hostname-Port Allocations
@@ -67,11 +67,24 @@ Hostname-Port Allocations
 Getting Started
 ---------------
 
-    git clone git@github.com:mkdevops-se/hq.mkdevops.se.git && cd hq.mkdevops.se/
-    python3 -m venv venv && . venv/bin/activate
+Clone the repo:
+
+    git clone git@github.com:mkdevops-se/hq.mkdevops.se.git
+    cd hq.mkdevops.se/
+
+Create a virtual environment and install the dependencies:
+
+    python3 -m venv venv
+    source venv/bin/activate
     pip install -r requirements.txt
     ansible-galaxy install -r requirements.yml
-    echo theSecretAnsibleVaultPassword > .vault-pass
-    chmod og-r .vault-pass
+
+Add the Ansible Vault password to a file named `.ansible_vault_password` and restrict readability:
+
+    echo theSecretAnsibleVaultPassword > .ansible_vault_password
+    chmod og-r .ansible_vault_password
+
+Run through the bootstrap playbook to configure the server:
+
     ansible-playbook bootstrap.yml --ask-become-pass --diff
 
