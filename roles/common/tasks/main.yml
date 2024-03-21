@@ -21,24 +21,30 @@
   with_items:
     - LC_ALL=en_US.UTF-8
     - LC_CTYPE=en_US.UTF-8
+  when: ansible_distribution == 'CentOS'
   tags: common
 
-- name: template sysctl tweaks (elastic and friends)
-  template: src=tweaks.conf.j2 dest=/etc/sysctl.d/tweaks.conf
-  register: sysctld_tweaks
-  tags: common
-
-- name: apply sysctl config if changed
-  shell: sysctl --system
-  when: sysctld_tweaks is changed
+- name: apply sysctl tweaks
+  when: ansible_distribution == 'CentOS'
+  block:
+    - name: template sysctl tweaks (elastic and friends)
+      template: src=tweaks.conf.j2 dest=/etc/sysctl.d/tweaks.conf
+      register: sysctld_tweaks
+      tags: common
+    - name: apply sysctl config if changed
+      shell: sysctl --system
+      when: sysctld_tweaks is changed
+      tags: common
   tags: common
 
 - name: install ntp
   yum: name=ntp state=present
+  when: ansible_distribution == 'CentOS'
   tags: common
 
 - name: ntpd running and enabled
   service: name=ntpd state=started enabled=yes
+  when: ansible_distribution == 'CentOS'
   tags: common
 
 - name: install firewalld
@@ -51,11 +57,17 @@
 
 - name: install wget, unzip, emacs, mlocate and such
   yum:
-    name: ['wget', 'zip', 'unzip', 'emacs', 'mlocate', 'bind-utils', 'pigz', 'man-pages',
-           'yum-plugin-versionlock', 'lsof', 'iotop', 'rsync', 'tcpdump', 'sysstat', 'tmux',
-           'policycoreutils-python', 'system-storage-manager', 'traceroute', 'bzip2', 'telnet',
-           'lynx', 'selinux-policy-sandbox', 'tree', 'createrepo']
+    name: [ 'wget', 'zip', 'unzip', 'emacs', 'mlocate', 'bind-utils', 'pigz', 'man-pages',
+            'yum-plugin-versionlock', 'lsof', 'iotop', 'rsync', 'tcpdump', 'sysstat', 'tmux',
+            'system-storage-manager', 'traceroute', 'bzip2', 'telnet', 'tree', 'createrepo' ]
     state: present
+  tags: common
+
+- name: install centos packages policycoreutils-python and lynx
+  yum:
+    name: [ 'policycoreutils-python', 'lynx' ]
+    state: present
+  when: ansible_distribution == 'CentOS'
   tags: common
 
 - name: disable emacs backup files by default
@@ -72,24 +84,25 @@
     baseurl: https://repo.ius.io/{{ ansible_distribution_major_version }}/$basearch/
     gpgkey: https://repo.ius.io/RPM-GPG-KEY-IUS-7
     enabled: no
+  when: ansible_distribution == 'CentOS'
   tags: common
 
-- name: uninstall ius git224 (2.x)
-  yum: name=git224-core enablerepo=ius state=absent
-  tags: common
-
-- name: install ius git236 (2.x)
-  yum: name=git236 enablerepo=ius state=present
-  ignore_errors: yes
-  register: install_ius_git236
-  tags: common
-
-- block:
-    - name: uninstall git (1.8)
-      yum: name=git state=absent
+- name: install ius git236
+  when: ansible_distribution == 'CentOS'
+  block:
     - name: install ius git236 (2.x)
       yum: name=git236 enablerepo=ius state=present
-  when: install_ius_git236 is failed
+      ignore_errors: yes
+      register: install_ius_git236
+      tags: common
+    - name: uninstall git (1.8)
+      yum: name=git state=absent
+      when: install_ius_git236 is failed
+      tags: common
+    - name: install ius git236 (2.x)
+      yum: name=git236 enablerepo=ius state=present
+      when: install_ius_git236 is failed
+      tags: common
   tags: common
 
 - name: check for git-lfs
@@ -97,6 +110,7 @@
   register: check_git_lfs_version
   ignore_errors: yes
   changed_when: no
+  when: ansible_distribution == 'CentOS'
   tags: common
 
 - block:
@@ -107,7 +121,7 @@
       shell: yum install -y git-lfs && git lfs install
       args:
         warn: no
-  when: check_git_lfs_version is failed
+  when: ansible_distribution == 'CentOS' and check_git_lfs_version is failed
   tags: common
 
 - name: epel repo
@@ -117,41 +131,47 @@
     baseurl: http://download.fedoraproject.org/pub/epel/$releasever/$basearch/
     gpgkey: http://download.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-$releasever
     enabled: no
+  when: ansible_distribution == 'CentOS'
   tags: common
 
 - name: install epel-release
   yum: name=epel-release state=present
+  when: ansible_distribution == 'CentOS'
   tags: common
 
 - name: install htop, jq, python-pip etc from epel
   yum:
-    name: ['htop', 'jq', 'python-pip', 'bash-completion-extras']
+    name: [ 'htop', 'jq', 'python-pip', 'bash-completion-extras' ]
     enablerepo: epel
     state: present
+  when: ansible_distribution == 'CentOS'
   tags: common
 
-- name: install snapd
-  yum: name=snapd enablerepo=epel state=present
-  register: snapd_install
-  tags: common
+- name: install snap on centos
+  when: ansible_distribution == 'CentOS'
+  block:
+    - name: install snapd
+      yum: name=snapd enablerepo=epel state=present
+      register: snapd_install
+      tags: common
 
-- name: enable classic snap support
-  file:
-    src: /var/lib/snapd/snap
-    dest: /snap
-    state: link
-  tags: common
+    - name: enable classic snap support
+      file:
+        src: /var/lib/snapd/snap
+        dest: /snap
+        state: link
+      tags: common
 
-- name: snapd running and enabled
-  service: name=snapd state=started enabled=yes
-  tags: common
+    - name: snapd running and enabled
+      service: name=snapd state=started enabled=yes
+      tags: common
 
-- name: update snap after install
-  shell: snap install core; snap refresh core
-  changed_when: true
-  failed_when: false
-  when: snapd_install is changed
-  tags: common
+    - name: update snap after install
+      shell: snap install core; snap refresh core
+      changed_when: true
+      failed_when: false
+      when: snapd_install is changed
+      tags: common
 
 - name: configure pip to disable version check
   blockinfile:
@@ -163,55 +183,56 @@
       disable-pip-version-check = True
   tags: common
 
-#- name: install pip-18.1
-#  pip: name=pip version=18.1 state=present
-#  tags: common
+- name: install various old python2 packages on centos
+  when: ansible_distribution == 'CentOS'
+  block:
+    - name: install cryptography
+      pip: name=cryptography==2.6.1 state=present
+      tags: common
 
-- name: install cryptography
-  pip: name=cryptography==2.6.1 state=present
-  tags: common
+    - name: install pynacl
+      pip: name=pynacl==1.2.1 state=present
+      tags: common
 
-- name: install pynacl
-  pip: name=pynacl==1.2.1 state=present
-  tags: common
+    - name: install bcrypt
+      pip: name=bcrypt==3.1.3 state=present
+      tags: common
 
-- name: install bcrypt
-  pip: name=bcrypt==3.1.3 state=present
-  tags: common
+    - name: install certifi
+      pip: name=certifi==2021.10.8 state=present
+      tags: common
 
-- name: install certifi
-  pip: name=certifi==2021.10.8 state=present
-  tags: common
+    - name: install passlib
+      pip: name=passlib==1.6.5 state=present
+      tags: common
 
-- name: install passlib
-  pip: name=passlib==1.6.5 state=present
-  tags: common
+    - name: check for aws cli
+      stat: path=/bin/aws
+      register: bin_aws_cli
+      tags: common
 
-- name: check for aws cli
-  stat: path=/bin/aws
-  register: bin_aws_cli
-  tags: common
+    - name: install awscli (with deps)
+      pip: name=awscli~=1.19.0 state=present
+      when: not (bin_aws_cli.stat.exists | bool)
+      tags: common
 
-- name: install awscli (with deps)
-  pip: name=awscli~=1.19.0 state=present
-  when: not (bin_aws_cli.stat.exists | bool)
-  tags: common
+    - name: install awscli (no-deps)
+      pip: name=awscli~=1.19.0 state=present extra_args=--no-deps
+      when: bin_aws_cli.stat.exists | bool
+      tags: common
 
-- name: install awscli (no-deps)
-  pip: name=awscli~=1.19.0 state=present extra_args=--no-deps
-  when: bin_aws_cli.stat.exists | bool
-  tags: common
-
-- name: install passlib
-  pip: name=passlib state=present
-  tags: common
+    - name: install passlib
+      pip: name=passlib state=present
+      tags: common
 
 - name: install centos-release-scl
   yum: name=centos-release-scl state=present
+  when: ansible_distribution == 'CentOS'
   tags: common
 
 - name: install python38 from scl
   yum: name=rh-python38 state=present
+  when: ansible_distribution == 'CentOS'
   tags: common
 
 #- name: install scl pip-20 for rh-python38
@@ -220,16 +241,17 @@
 #  changed_when: scl_pip_install.stdout.find('already satisfied') == -1
 #  tags: common
 
-- name: install rh-nodejs12
-  yum:
-    name: rh-nodejs12
-    state: present
-  tags: common
-
-- name: install rh-nodejs14
-  yum:
-    name: rh-nodejs14
-    state: present
+- name: install legacy node versions from scl
+  when: ansible_distribution == 'CentOS'
+  block:
+    - name: install rh-nodejs12
+      yum:
+        name: rh-nodejs12
+        state: present
+    - name: install rh-nodejs14
+      yum:
+        name: rh-nodejs14
+        state: present
   tags: common
 
 - name: configure sysadmin accounts
@@ -292,7 +314,7 @@
 
 - name: update selinux to allow ssh port {{ sshd_port }}
   shell: semanage port -a -t ssh_port_t -p tcp {{ sshd_port }}
-  when: sshd_config is changed
+  when: ansible_distribution == 'CentOS' and sshd_config is changed
   ignore_errors: yes
   tags: common
 
@@ -307,38 +329,17 @@
     state: absent
   tags: common
 
-- name: install yum-cron
-  yum: name=yum-cron state=present
-  tags: common
-
-- name: template /etc/yum/yum-cron.conf
-  template:
-    src: yum-cron.conf.j2
-    dest: /etc/yum/yum-cron.conf
-  tags: common
-
-- name: extend root filesystem from 2g to 4g
-  lvol: vg=sys lv=root size=4g resizefs=yes
-  tags: common
-
-- name: extend var filesystem from 1g to 2g
-  lvol: vg=sys lv=var size=2g resizefs=yes
-  tags: common
-
-- name: extend var_log filesystem from 512m to 2g
-  lvol: vg=sys lv=var_log size=2g resizefs=yes
-  tags: common
-
-- name: extend opt filesystem from 512m to 4g
-  lvol: vg=sys lv=opt size=4g resizefs=yes
-  tags: common
-
-- name: yum-cron service running and auto-starting
-  service: name=yum-cron state=started enabled=yes
-  tags: common
-
-- name: extend home filesystem from 4g to 96g
-  lvol: vg=sys lv=home size=96g resizefs=yes
+- name: install yum-cron on centos
+  when: ansible_distribution == 'CentOS'
+  block:
+    - name: install yum-cron
+      yum: name=yum-cron state=present
+    - name: template /etc/yum/yum-cron.conf
+      template:
+        src: yum-cron.conf.j2
+        dest: /etc/yum/yum-cron.conf
+    - name: yum-cron service running and auto-starting
+      service: name=yum-cron state=started enabled=yes
   tags: common
 
 ...

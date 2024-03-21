@@ -5,7 +5,9 @@
   become: yes
   roles:
     - role: common
+
     - role: minio-disks
+
     - role: nginx
       vhosts:
         - name: hq.mkdevops.se
@@ -37,7 +39,8 @@
         - name: kibana.mkdevops.se
           local_port: 5601
           basic_auth: yes
+      when: ansible_distribution == 'CentOS'
 
     - role: docker
-
+      when: ansible_distribution == 'CentOS'
 ...

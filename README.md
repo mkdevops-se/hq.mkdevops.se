@@ -17,9 +17,9 @@ Purpose
 Server Baseline
 ---------------
 
-*Hardware:*
+*Hardware (OUTDATED, UPDATE!):*
 
-    OS: CentOS 7.5 minimal (install 2018-11-24)
+    OS: AlmaLinux 8.9 minimal (install 2024-03-21)
     CPUs: 4 (i5-7200 2.50 GHz, fanless)
     Memory: 32 GB (DDR4 SDRAM, 2133 MHz)
     Disk: 256 GB SSD (Samsung)
@@ -30,7 +30,7 @@ Server Baseline
       - wlp2s0, 802.11ac
 
 
-*LVM Partitioning:*
+*LVM Partitioning (OUTDATED, UPDATE!):*
 
 | Volume                    | Pool  | Size (MB) |   FS   | Mount Point       |
 |:--------------------------|:-----:|----------:|:------:|:------------------|
@@ -49,8 +49,8 @@ Server Baseline
 | `/dev/nvme0n1p2`          |       |    `1024` | `xfs`  | `/boot`           |
 
 
-Hostname-Port Allocations
--------------------------
+Hostname-Port Allocations (DEPRECATED, REMOVE!)
+-----------------------------------------------
 
 | Hostname                   |   Port | Comment                                        |
 |:---------------------------|-------:|:-----------------------------------------------|
