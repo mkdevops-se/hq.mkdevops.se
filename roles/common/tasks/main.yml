@@ -1,11 +1,11 @@
 ---
 
-- name: enable selinux
-  selinux: policy=targeted state=enforcing
+- name: Enable SELinux
+  ansible.posix.selinux: policy=targeted state=enforcing
   tags: common
 
-- name: set hostname
-  hostname: name="{{ inventory_hostname }}"
+- name: Set hostname
+  ansible.builtin.hostname: name="{{ inventory_hostname }}"
   tags: common
 
 - name: set timezone to europe/stockholm
@@ -47,16 +47,16 @@
   when: ansible_distribution == 'CentOS'
   tags: common
 
-- name: install firewalld
-  yum: name=firewalld state=present
+- name: Install firewalld
+  ansible.builtin.yum: name=firewalld state=present
   tags: common
 
-- name: firewalld running and enabled
-  service: name=firewalld state=started enabled=yes
+- name: Firewalld running and enabled
+  ansible.builtin.service: name=firewalld state=started enabled=yes
   tags: common
 
-- name: install wget, unzip, emacs, mlocate and such
-  yum:
+- name: Install wget, unzip, emacs, mlocate and such
+  ansible.builtin.yum:
     name: [ 'wget', 'zip', 'unzip', 'emacs', 'mlocate', 'bind-utils', 'pigz', 'man-pages',
             'yum-plugin-versionlock', 'lsof', 'iotop', 'rsync', 'tcpdump', 'sysstat', 'tmux',
             'system-storage-manager', 'traceroute', 'bzip2', 'telnet', 'tree', 'createrepo' ]
@@ -85,6 +85,11 @@
     gpgkey: https://repo.ius.io/RPM-GPG-KEY-IUS-7
     enabled: no
   when: ansible_distribution == 'CentOS'
+  tags: common
+
+- name: Install Git from AppStream
+  ansible.builtin.yum: name=git-all state=present
+  when: ansible_distribution == 'AlmaLinux'
   tags: common
 
 - name: install ius git236
@@ -173,8 +178,8 @@
       when: snapd_install is changed
       tags: common
 
-- name: configure pip to disable version check
-  blockinfile:
+- name: Configure Python Pip to disable version check
+  ansible.builtin.blockinfile:
     path: /etc/pip.conf
     create: yes
     marker: "# {mark} ANSIBLE MANAGED BLOCK common"
@@ -235,8 +240,8 @@
   when: ansible_distribution == 'CentOS'
   tags: common
 
-- name: install python3.11 from AppStream
-  yum: name=python3.11-devel state=present
+- name: Install Python 3.11 from AppStream
+  ansible.builtin.yum: name=python3.11-devel state=present
   when: ansible_distribution == 'AlmaLinux'
   tags: common
 
@@ -259,13 +264,18 @@
         state: present
   tags: common
 
-- name: install node10 from AppStream
-  yum: name=nodejs-devel state=present
+- name: Install Node 10 from AppStream
+  ansible.builtin.yum: name=nodejs-devel state=present
   when: ansible_distribution == 'AlmaLinux'
   tags: common
 
-- name: configure sysadmin accounts
-  user:
+- name: Install OpenJDK 21 from AppStream
+  yum: name=java-21-openjdk-devel state=present
+  when: ansible_distribution == 'AlmaLinux'
+  tags: common
+
+- name: Configure sysadmin accounts
+  ansible.builtin.user:
     name: "{{ item.user }}"
     password: "{{ item.passwd }}"
     groups: wheel
@@ -274,16 +284,16 @@
   with_items: "{{ sysadmins }}"
   tags: common
 
-- name: set ~/.ssh/authorized_keys for sysadmins
-  authorized_key:
+- name: Set ~/.ssh/authorized_keys for sysadmins
+  ansible.posix.authorized_key:
     user: "{{ item.user }}"
     key: "{{ lookup('file', item.user + '_id_rsa.pub') }}"
     exclusive: yes
   with_items: "{{ sysadmins }}"
   tags: common
 
-- name: update bashrc with better bash history for root and sysadmins
-  blockinfile:
+- name: Update bashrc with better bash history for root and sysadmins
+  ansible.builtin.blockinfile:
     dest: "{{ '/root' if item == 'root' else '/home/' + item }}/.bashrc"
     create: yes
     owner: "{{ item }}"
@@ -300,17 +310,17 @@
   with_items: "{{ ['root'] + (sysadmins | map(attribute='user') | list) }}"
   tags: common
 
-- name: assert sysadmins are named
+- name: Assert sysadmins are named
   fail: msg="sysadmins must be listed"
   when: not (sysadmins | length)
   tags: common
 
-- name: allow incoming ssh traffic (firewalld)
+- name: Allow incoming SSH traffic (firewalld)
   ansible.posix.firewalld: port={{ sshd_port }}/tcp permanent=True state=enabled immediate=yes
   tags: common
 
-- name: disable password authentication and root login in sshd_config
-  blockinfile:
+- name: Disable password authentication and root login in sshd_config
+  ansible.builtin.blockinfile:
     dest: /etc/ssh/sshd_config
     marker: "# {mark} ANSIBLE MANAGED BLOCK common"
     block: |
@@ -333,8 +343,8 @@
   when: sshd_config is changed
   tags: common
 
-- name: remove ~/.ssh/authorized_keys for 'root' user
-  file:
+- name: Remove ~/.ssh/authorized_keys for 'root' user
+  ansible.builtin.file:
     path: /root/.ssh/authorized_keys
     state: absent
   tags: common
