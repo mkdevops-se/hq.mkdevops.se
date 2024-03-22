@@ -235,6 +235,11 @@
   when: ansible_distribution == 'CentOS'
   tags: common
 
+- name: install python3.11 from AppStream
+  yum: name=python3.11-devel state=present
+  when: ansible_distribution == 'AlmaLinux'
+  tags: common
+
 #- name: install scl pip-20 for rh-python38
 #  shell: scl enable rh-python38 "python3 -m pip install pip==20.3.3"
 #  register: scl_pip_install
@@ -252,6 +257,11 @@
       yum:
         name: rh-nodejs14
         state: present
+  tags: common
+
+- name: install node10 from AppStream
+  yum: name=nodejs-devel state=present
+  when: ansible_distribution == 'AlmaLinux'
   tags: common
 
 - name: configure sysadmin accounts
