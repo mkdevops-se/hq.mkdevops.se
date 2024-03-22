@@ -42,5 +42,5 @@
       when: ansible_distribution == 'CentOS'
 
     - role: docker
-      when: ansible_distribution == 'CentOS'
+
 ...

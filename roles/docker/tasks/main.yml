@@ -1,57 +1,64 @@
 ---
 
-- name: docker-ce repo
-  yum_repository:
+- name: Configure 'docker-ce-stable' repo
+  ansible.builtin.yum_repository:
     name: docker-ce-stable
     description: Docker CE Stable - $basearch
-    baseurl: https://download.docker.com/linux/centos/$releasever/$basearch/stable
-    gpgkey: https://download.docker.com/linux/centos/gpg
+    baseurl: https://download.docker.com/linux/rhel/$releasever/$basearch/stable
+    gpgkey: https://download.docker.com/linux/rhel/gpg
     enabled: no
   tags: docker
 
-- name: install docker-ce-20.10.18 from docker-ce
-  yum: name=docker-ce-20.10.18 enablerepo=docker-ce-stable state=present
+- name: Install 'docker-ce-25.0.5'
+  ansible.builtin.yum: name=docker-ce-25.0.5 enablerepo=docker-ce-stable state=present
   notify: restart docker
   tags: docker
 
 - name: install docker-compose-1.24.1
   pip: name=docker-compose version=1.24.1 state=present
+  when: ansible_distribution == 'CentOS'
   tags: docker
 
-- name: create 64g var_lib_docker for /var/lib/docker
-  lvol: vg=sys lv=var_lib_docker size=64g resizefs=yes
-  register: var_lib_docker
-  tags: docker
+- name: create /var/lib/docker lvm volume
+  when: ansible_distribution == 'CentOS'
+  block:
+    - name: create 64g var_lib_docker for /var/lib/docker
+      lvol: vg=sys lv=var_lib_docker size=64g resizefs=yes
+      register: var_lib_docker
+      tags: docker
 
-- name: format var_lib_docker as xfs
-  filesystem:
-    fstype: xfs
-    dev: /dev/sys/var_lib_docker
-    resizefs: yes
-    opts: -n ftype=1
-  when: var_lib_docker is changed
-  tags: docker
+    - name: format var_lib_docker as xfs
+      filesystem:
+        fstype: xfs
+        dev: /dev/sys/var_lib_docker
+        resizefs: yes
+        opts: -n ftype=1
+      when: var_lib_docker is changed
+      tags: docker
 
-- name: mount var_lib_docker as /var/lib/docker
-  mount:
-    path: /var/lib/docker
-    fstype: xfs
-    src: /dev/sys/var_lib_docker
-    state: mounted
-    boot: yes
-  tags: docker
+    - name: mount var_lib_docker as /var/lib/docker
+      mount:
+        path: /var/lib/docker
+        fstype: xfs
+        src: /dev/sys/var_lib_docker
+        state: mounted
+        boot: yes
+      tags: docker
 
-- name: create /etc/docker dir
-  file: path=/etc/docker owner=root group=docker state=directory
-  tags: docker
+- name: configure /etc/docker/daemon.json
+  when: ansible_distribution == 'CentOS'
+  block:
+    - name: create /etc/docker dir
+      file: path=/etc/docker owner=root group=docker state=directory
+      tags: docker
 
-- name: template docker daemon.json
-  template: src=daemon.json.j2 dest=/etc/docker/daemon.json owner=root group=docker
-  register: docker_daemon_json
-  tags: docker
+    - name: template docker daemon.json
+      template: src=daemon.json.j2 dest=/etc/docker/daemon.json owner=root group=docker
+      register: docker_daemon_json
+      tags: docker
 
-- name: docker (re)started and enabled
-  service: name=docker state={{ 're' if docker_daemon_json is changed else '' }}started enabled=yes
-  tags: docker
+    - name: docker (re)started and enabled
+      service: name=docker state={{ 're' if docker_daemon_json is changed else '' }}started enabled=yes
+      tags: docker
 
 ...
