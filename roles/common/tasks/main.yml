@@ -139,9 +139,8 @@
   when: ansible_distribution == 'CentOS'
   tags: common
 
-- name: install epel-release
-  yum: name=epel-release state=present
-  when: ansible_distribution == 'CentOS'
+- name: Install EPEL repo
+  ansible.builtin.yum: name=epel-release state=present
   tags: common
 
 - name: install htop, jq, python-pip etc from epel
@@ -150,6 +149,13 @@
     enablerepo: epel
     state: present
   when: ansible_distribution == 'CentOS'
+  tags: common
+
+- name: Install 'htop' and 'jq' from EPEL, 'bash-completion' from base
+  yum:
+    name: [ 'htop', 'jq', 'bash-completion' ]
+    state: present
+  when: ansible_distribution == 'AlmaLinux'
   tags: common
 
 - name: install snap on centos
