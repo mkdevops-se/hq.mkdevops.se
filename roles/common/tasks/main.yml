@@ -158,31 +158,28 @@
   when: ansible_distribution == 'AlmaLinux'
   tags: common
 
-- name: install snap on centos
-  when: ansible_distribution == 'CentOS'
-  block:
-    - name: install snapd
-      yum: name=snapd enablerepo=epel state=present
-      register: snapd_install
-      tags: common
+- name: Install snapd from EPEL
+  ansible.builtin.yum: name=snapd enablerepo=epel state=present
+  register: snapd_install
+  tags: common
 
-    - name: enable classic snap support
-      file:
-        src: /var/lib/snapd/snap
-        dest: /snap
-        state: link
-      tags: common
+- name: Enable 'classic snap' support
+  ansible.builtin.file:
+    src: /var/lib/snapd/snap
+    dest: /snap
+    state: link
+  tags: common
 
-    - name: snapd running and enabled
-      service: name=snapd state=started enabled=yes
-      tags: common
+- name: Set snapd service to running and enabled
+  service: name=snapd state=started enabled=yes
+  tags: common
 
-    - name: update snap after install
-      shell: snap install core; snap refresh core
-      changed_when: true
-      failed_when: false
-      when: snapd_install is changed
-      tags: common
+- name: Update snap after install
+  shell: snap install core; snap refresh core
+  changed_when: true
+  failed_when: false
+  when: snapd_install is changed
+  tags: common
 
 - name: Configure Python Pip to disable version check
   ansible.builtin.blockinfile:
