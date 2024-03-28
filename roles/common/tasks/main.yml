@@ -346,11 +346,11 @@
   when: sshd_config is changed
   tags: common
 
-- name: Remove ~/.ssh/authorized_keys for 'root' user
-  ansible.builtin.file:
-    path: /root/.ssh/authorized_keys
-    state: absent
-  tags: common
+#- name: Remove ~/.ssh/authorized_keys for 'root' user
+#  ansible.builtin.file:
+#    path: /root/.ssh/authorized_keys
+#    state: absent
+#  tags: common
 
 - name: install yum-cron on centos
   when: ansible_distribution == 'CentOS'
@@ -363,6 +363,14 @@
         dest: /etc/yum/yum-cron.conf
     - name: yum-cron service running and auto-starting
       service: name=yum-cron state=started enabled=yes
+  tags: common
+
+- name: set root filesystem to 100g
+  lvol: vg=almalinux_hq lv=root size=100g resizefs=yes
+  tags: common
+
+- name: set home filesystem to 500g
+  lvol: vg=almalinux_hq lv=home size=500g resizefs=yes force=yes
   tags: common
 
 ...
