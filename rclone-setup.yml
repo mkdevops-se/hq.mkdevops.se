@@ -1,0 +1,70 @@
+---
+
+- name: rclone-setup
+  hosts: all
+  become: yes
+  roles:
+    - role: stefangweichinger.ansible_rclone
+      rclone_version: "1.66.0"
+      rclone_config_location: /home/mblomdahl/.config/rclone/rclone.conf
+      rclone_config_owner:
+        OWNER: mblomdahl
+        GROUP: mblomdahl
+      rclone_configs:
+        - name: "{{ s3_otmc_alias }}"
+          properties:
+            type: s3
+            provider: Minio
+            access_key_id: "{{ s3_otmc_access_key }}"
+            secret_access_key: "{{ s3_otmc_secret_key }}"
+            endpoint: "https://{{ s3_otmc_alias }}"
+            acl: private
+            bucket_acl: private
+            profile: minio
+        - name: "{{ s3_swt0_alias }}"
+          properties:
+            type: s3
+            provider: AWS
+            access_key_id: "{{ s3_swt0_access_key }}"
+            secret_access_key: "{{ s3_swt0_secret_key }}"
+            region: eu-north-1
+            endpoint: https://s3-eu-north-1.amazonaws.com
+            location_constraint: eu-north-1
+            acl: private
+        - name: "{{ s3_swt1_alias }}"
+          properties:
+            type: s3
+            provider: AWS
+            access_key_id: "{{ s3_swt1_access_key }}"
+            secret_access_key: "{{ s3_swt1_secret_key }}"
+            region: eu-north-1
+            endpoint: https://s3-eu-north-1.amazonaws.com
+            location_constraint: eu-north-1
+            acl: private
+        - name: "{{ s3_swt3_alias }}"
+          properties:
+            type: s3
+            provider: AWS
+            access_key_id: "{{ s3_swt3_access_key }}"
+            secret_access_key: "{{ s3_swt3_secret_key }}"
+            region: eu-north-1
+            endpoint: https://s3-eu-north-1.amazonaws.com
+            location_constraint: eu-north-1
+            acl: private
+        - name: "{{ s3_sms0_alias }}"
+          properties:
+            type: s3
+            provider: AWS
+            access_key_id: "{{ s3_sms0_access_key }}"
+            secret_access_key: "{{ s3_sms0_secret_key }}"
+            region: eu-north-1
+            endpoint: https://s3-eu-north-1.amazonaws.com
+            location_constraint: eu-north-1
+            acl: private
+        - name: "{{ bb_mrnd_alias }}"
+          properties:
+            type: b2
+            account: "{{ bb_mrnd_access_key }}"
+            key: "{{ bb_mrnd_secret_key }}"
+
+...

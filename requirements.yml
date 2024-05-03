@@ -1,2 +1,5 @@
 - src: geerlingguy.certbot
   version: 4.0.0
+
+- src: stefangweichinger.ansible_rclone
+  version: 0.1.5

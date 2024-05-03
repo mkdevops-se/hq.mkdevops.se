@@ -118,6 +118,7 @@ venv.bak/
 
 # Galaxy roles
 roles/geerlingguy.certbot
+roles/stefangweichinger.ansible_rclone
 
 # Ansible Vault
 .ansible_vault_password

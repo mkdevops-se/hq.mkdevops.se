@@ -80,3 +80,8 @@ Run through the bootstrap playbook to configure the server:
 
     ansible-playbook bootstrap.yml --ask-become-pass --diff
 
+Optionally, install and configure `rclone` (**WARNING: The Ansible Galaxy role used here spills
+sensitive data in logs, do not include in GitHub Actions run!**):
+
+    ansible-playbook rclone-setup.yml -e @rclone-secrets.yml --ask-become-pass --diff
+
